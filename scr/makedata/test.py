@@ -10,7 +10,7 @@
 
 import csv
 
-with open('D:/study/code/Source/pycharm_workspace/testing/data/dataset_edu2.txt', 'r', encoding='utf-8') as f1, open('D:/study/code/Source/pycharm_workspace/testing/data/final.csv', 'w', newline='', encoding='utf-8') as f2:
+with open('D:/study/code/Source/pycharm_workspace/abuse_division/data/dataset_edu2.txt', 'r', encoding='utf-8') as f1, open('D:/study/code/Source/pycharm_workspace/abuse_division/data/final.csv', 'w', newline='', encoding='utf-8') as f2:
     writer = csv.writer(f2)
     writer.writerow(['text', 'label'])
 
