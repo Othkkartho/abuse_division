@@ -1,5 +1,5 @@
 # 전처리 코드 불러오기
-from scr.training.pretreatment import pretreatment, sentiment_predict
+from scr.training.pretreatment import pretreatment, sentiment_predict, model_loss
 import autokeras as ak
 import numpy as np
 import tensorflow as tf
@@ -23,10 +23,12 @@ class RNNAutoml:
             directory='../../data/model/autokeras_rnn',
         )
 
-        auto_model.fit(X_train, y_train, epochs=20, validation_split=0.2)
+        history = auto_model.fit(X_train, y_train, epochs=20, validation_split=0.2)
         loaded_model = auto_model.export_model()
         tf.keras.models.save_model(loaded_model, '../../data/model/automlkeras_best_model.h5', save_format='h5')
         print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
+
+        model_loss(history)
 
         return loaded_model
 

@@ -1,5 +1,5 @@
 # 전처리 코드 불러오기
-from scr.training.pretreatment import pretreatment, sentiment_predict
+from scr.training.pretreatment import pretreatment, sentiment_predict, model_loss
 from tensorflow.keras.layers import Embedding, Dense, LSTM, Bidirectional
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -22,6 +22,8 @@ class RNN:
         loaded_model = load_model('../../data/model/rnn_BiLSTM_best_model.h5')
         print("테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
 
+        model_loss(history)
+
         return loaded_model
 
     # LSTM으로 네이버 영화 리뷰 감성 분류하기
@@ -41,6 +43,8 @@ class RNN:
 
         loaded_model = load_model('../../data/model/rnn_LSTM_best_model.h5')
         print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
+
+        model_loss(history)
 
         return loaded_model
 

@@ -109,6 +109,7 @@ def pretreatment():
     plt.hist([len(review) for review in X_train], bins=50)
     plt.xlabel('length of samples')
     plt.ylabel('number of samples')
+
     # plt.show()
 
     def below_threshold_len(max_len, nested_list):
@@ -140,3 +141,14 @@ def sentiment_predict(new_sentence, loaded_model, stopwords, tokenizer, max_len)
         print("{:.2f}% 확률로 옥설입니다.".format(score * 100))
     else:
         print("{:.2f}% 확률로 욕설이 아닙니다.".format((1 - score) * 100))
+
+
+def model_loss(history):
+    epochs = range(1, len(history.history['acc']) + 1)
+    plt.plot(epochs, history.history['loss'])
+    plt.plot(epochs, history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.show()
