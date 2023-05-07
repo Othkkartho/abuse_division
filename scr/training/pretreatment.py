@@ -13,6 +13,7 @@ def pretreatment():
     plt.rcParams["font.family"] = 'NanumGothic'
 
     data = pd.read_csv('../../data/final.csv', encoding='utf-8')
+    # data = pd.read_csv('../../data/origin_final.csv', encoding='utf-8')
     # print('총 샘플의 수 :', len(data))
 
     # print(data['text'].nunique(), data['label'].nunique())
@@ -144,6 +145,7 @@ def sentiment_predict(new_sentence, loaded_model, stopwords, tokenizer, max_len)
 
 
 def model_loss(history):
+    plt.clf()
     epochs = range(1, len(history.history['acc']) + 1)
     plt.plot(epochs, history.history['loss'])
     plt.plot(epochs, history.history['val_loss'])
