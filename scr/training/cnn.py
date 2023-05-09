@@ -9,9 +9,9 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 class CNN:
     def multiKernel(self, vocab_size, X_train, X_test, y_train, y_test, max_len):
-        embedding_dim = 128
+        embedding_dim = 32
         dropout_ratio = (0.5, 0.8)
-        num_filters = 128
+        num_filters = 32
         hidden_units = 128
 
         model_input = Input(shape=(max_len,))
