@@ -25,7 +25,7 @@ class RNNAutoml:
 
         history = auto_model.fit(X_train, y_train, epochs=20, validation_split=0.2)
         loaded_model = auto_model.export_model()
-        tf.keras.models.save_model(loaded_model, '../../data/model/automlkeras_best_model.h5', save_format='h5')
+        tf.keras.models.save_model(loaded_model, '../../data/model/automlkeras_rnn_best_model.h5', save_format='h5')
         print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
 
         model_loss(history)

@@ -3,9 +3,12 @@ from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Embedding, Dropout, Conv1D, GlobalMaxPooling1D, Dense, Input, Flatten, Concatenate
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
 
 class CNN:
-    def multiKernel(self, vocab_size, X_train, X_test, y_train, y_test):
+    def multiKernel(self, vocab_size, X_train, X_test, y_train, y_test, max_len):
         embedding_dim = 128
         dropout_ratio = (0.5, 0.8)
         num_filters = 128
@@ -35,9 +38,11 @@ class CNN:
         model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["acc"])
 
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=4)
-        mc = ModelCheckpoint('../../data/model/CNN_mk_model.h5', monitor='val_acc', mode='max', verbose=1, save_best_only=True)
+        mc = ModelCheckpoint('../../data/model/CNN_mk_model.h5', monitor='val_acc', mode='max', verbose=1,
+                             save_best_only=True)
 
-        history = model.fit(X_train, y_train, batch_size=64, epochs=10, validation_split=0.2, verbose=2, callbacks=[es, mc])
+        history = model.fit(X_train, y_train, batch_size=64, epochs=10, validation_split=0.2, verbose=2,
+                            callbacks=[es, mc])
 
         loaded_model = load_model('../../data/model/CNN_mk_model.h5')
         print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
@@ -48,7 +53,7 @@ class CNN:
 
     # 리뷰 예측해보기
 
-    def onedcnn(self, vocab_size, X_train, X_test, y_train, y_test):
+    def onedcnn(self, vocab_size, X_train, X_test, y_train, y_test, max_len):
         embedding_dim = 32
         dropout_ratio = 0.3
         num_filters = 32
@@ -61,30 +66,42 @@ class CNN:
         model.add(GlobalMaxPooling1D())
         model.add(Dropout(dropout_ratio))
         model.add(Dense(1, activation='sigmoid'))
-        model.compile(optimize='adam', loss='binary_crossentropy', metrics=['acc'])
+        model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
 
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=4)
         mc = ModelCheckpoint('../../data/model/CNN_od_model.h5', monitor='val_acc', mode='max', verbose=1,
                              save_best_only=True)
 
-        history = model.fit(X_train_padding, y_train, batch_size=64, epochs=10, validation_split=0.2, verbose=2,
+        history = model.fit(X_train, y_train, batch_size=64, epochs=10, validation_split=0.2, verbose=2,
                             callbacks=[es, mc])
 
-        X_test_encoded = tokenizer.texts_to_sequences(X_test)
+        str_X_train = [str(x) for x in X_train]
+        tokenizer = Tokenizer()
+        tokenizer.fit_on_texts(str_X_train)
+
+        str_X_test = [str(x) for x in X_test]
+        X_test_encoded = tokenizer.texts_to_sequences(str_X_test)
         X_test_padded = pad_sequences(X_test_encoded, maxlen=max_len)
         print("\n 테스트 정확도: %.4f" % (model.evaluate(X_test_padded, y_test)[1]))
 
-        loaded_model = load_model('../../data/model/CNN_mk_model.h5')
+        loaded_model = load_model('../../data/model/CNN_od_model.h5')
+
+        model_loss(history)
 
         return loaded_model
 
     def __init__(self):
         X_train, X_test, y_train, y_test, vocab_size, max_len, stopwords, tokenizer = pretreatment()
 
-        loaded_model_mk = self.multiKernel(vocab_size, X_train, X_test, y_train, y_test)
+        max_len = 60
+
+        loaded_model_mk = self.multiKernel(vocab_size, X_train, X_test, y_train, y_test, max_len)
+        loaded_model_od = self.onedcnn(vocab_size, X_train, X_test, y_train, y_test, max_len)
 
         sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_mk, stopwords, tokenizer, max_len)
+        sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_od, stopwords, tokenizer, max_len)
         sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_mk, stopwords, tokenizer, max_len)
+        sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_od, stopwords, tokenizer, max_len)
 
 
 CNN()

@@ -146,7 +146,10 @@ def sentiment_predict(new_sentence, loaded_model, stopwords, tokenizer, max_len)
 
 def model_loss(history):
     plt.clf()
-    epochs = range(1, len(history.history['acc']) + 1)
+    try:
+        epochs = range(1, len(history.history['acc']) + 1)
+    except KeyError:
+        epochs = range(1, len(history.history['accuracy']) + 1)
     plt.plot(epochs, history.history['loss'])
     plt.plot(epochs, history.history['val_loss'])
     plt.title('model loss')
