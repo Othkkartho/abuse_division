@@ -17,7 +17,7 @@ class RNN:
                              save_best_only=True)
 
         model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
-        history = model.fit(X_train, y_train, epochs=4, callbacks=[es, mc], batch_size=64, validation_split=0.2)
+        history = model.fit(X_train, y_train, epochs=20, callbacks=[es, mc], batch_size=64, validation_split=0.2)
 
         loaded_model = load_model('../../data/model/rnn_BiLSTM_best_model.h5')
         print("테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
@@ -39,7 +39,7 @@ class RNN:
                              save_best_only=True)
 
         model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
-        history = model.fit(X_train, y_train, epochs=4, callbacks=[es, mc], batch_size=64, validation_split=0.2)
+        history = model.fit(X_train, y_train, epochs=20, callbacks=[es, mc], batch_size=64, validation_split=0.2)
 
         loaded_model = load_model('../../data/model/rnn_LSTM_best_model.h5')
         print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))

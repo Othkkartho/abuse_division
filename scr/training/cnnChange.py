@@ -98,10 +98,10 @@ class CNN:
         loaded_model_mk = self.multiKernel(vocab_size, X_train, X_test, y_train, y_test, max_len)
         loaded_model_od = self.onedcnn(vocab_size, X_train, X_test, y_train, y_test, max_len)
 
-        sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_mk, stopwords, tokenizer, max_len)
-        sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_od, stopwords, tokenizer, max_len)
-        sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_mk, stopwords, tokenizer, max_len)
-        sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_od, stopwords, tokenizer, max_len)
+        # sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_mk, stopwords, tokenizer, max_len)
+        # sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_od, stopwords, tokenizer, max_len)
+        # sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_mk, stopwords, tokenizer, max_len)
+        # sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_od, stopwords, tokenizer, max_len)
 
 
 CNN()

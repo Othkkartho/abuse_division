@@ -105,11 +105,11 @@ def pretreatment():
 
     # 패딩
 
-    print('댓글의 최대 길이 :', max(len(review) for review in X_train))
-    print('댓글의 평균 길이 :', sum(map(len, X_train)) / len(X_train))
-    plt.hist([len(review) for review in X_train], bins=50)
-    plt.xlabel('length of samples')
-    plt.ylabel('number of samples')
+    # print('댓글의 최대 길이 :', max(len(review) for review in X_train))
+    # print('댓글의 평균 길이 :', sum(map(len, X_train)) / len(X_train))
+    # plt.hist([len(review) for review in X_train], bins=50)
+    # plt.xlabel('length of samples')
+    # plt.ylabel('number of samples')
 
     # plt.show()
 

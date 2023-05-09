@@ -5,7 +5,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 
 class RNN:
-    def BiLstmLearn(self, embedding_dim, hidden_units, vocab_size, X_train, X_test, y_train, y_test):
+    def BiLstmLearn(embedding_dim, hidden_units, vocab_size, X_train, X_test, y_train, y_test, batch_size):
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_dim))
         model.add(Bidirectional(LSTM(hidden_units)))  # Bidirectional LSTM을 사용
@@ -16,18 +16,19 @@ class RNN:
                              save_best_only=True)
 
         model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
-        history = model.fit(X_train, y_train, epochs=4, callbacks=[es, mc], batch_size=64, validation_split=0.2)
+        history = model.fit(X_train, y_train, epochs=4, callbacks=[es, mc], batch_size=batch_size, validation_split=0.2)
 
         loaded_model = load_model('../../data/model/rnn_BiLSTM_best_model.h5')
-        print("테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
+        loss, final_acc = loaded_model.evaluate(X_test, y_test)
+        print("테스트 정확도: %.4f" % final_acc)
 
-        model_loss(history)
+        # model_loss(history)
 
-        return loaded_model
+        return loaded_model, loss, final_acc
 
     # LSTM으로 욕설 분류하기
 
-    def LstmLearn(self, embedding_dim, hidden_units, vocab_size, X_train, X_test, y_train, y_test):
+    def LstmLearn(embedding_dim, hidden_units, vocab_size, X_train, X_test, y_train, y_test, batch_size):
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_dim))
         model.add(LSTM(hidden_units))
@@ -38,28 +39,56 @@ class RNN:
                              save_best_only=True)
 
         model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
-        history = model.fit(X_train, y_train, epochs=4, callbacks=[es, mc], batch_size=64, validation_split=0.2)
+        history = model.fit(X_train, y_train, epochs=4, callbacks=[es, mc], batch_size=batch_size, validation_split=0.2)
 
         loaded_model = load_model('../../data/model/rnn_LSTM_best_model.h5')
-        print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
+        loss, final_acc = loaded_model.evaluate(X_test, y_test)
+        print("\n 테스트 정확도: %.4f" % final_acc)
 
-        model_loss(history)
+        # model_loss(history)
 
-        return loaded_model
+        return loaded_model, loss, final_acc
 
     # 리뷰 예측해보기
 
-    def __init__(self):
-        embedding_dim = 32
-        hidden_units = 32
+    def start(ci, cj, ck):
+        result = []
+        embedding_dim = ci
+        hidden_units = cj
+        batch_size = ck
+
+        result.append(embedding_dim)
+        result.append(hidden_units)
+        result.append(batch_size)
 
         X_train, X_test, y_train, y_test, vocab_size, max_len, stopwords, tokenizer = pretreatment()
 
-        loaded_model_lstm = self.LstmLearn(embedding_dim, hidden_units, vocab_size, X_train, X_test, y_train, y_test)
-        loaded_model_bilstm = self.BiLstmLearn(embedding_dim, hidden_units, vocab_size, X_train, X_test, y_train, y_test)
+        loaded_model_lstm, l_loss, final_acc_l = RNN.LstmLearn(embedding_dim, hidden_units, vocab_size, X_train, X_test,
+                                                        y_train, y_test, batch_size)
+        loaded_model_bilstm, b_loss, final_acc_b = RNN.BiLstmLearn(embedding_dim, hidden_units, vocab_size, X_train, X_test,
+                                                            y_train, y_test, batch_size)
 
-        sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_lstm, stopwords, tokenizer, max_len)
-        sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_lstm, stopwords, tokenizer, max_len)
+        result.append(l_loss)
+        result.append(final_acc_l)
+        result.append(b_loss)
+        result.append(final_acc_b)
+
+        # sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_lstm, stopwords, tokenizer, max_len)
+        # sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_lstm, stopwords, tokenizer, max_len)
 
 
-rnn = RNN()
+rnn = []
+for i in range(0, 9, 2):
+    for j in range(0, 9, 2):
+        for k in range(0, 9, 2):
+            ci = 2 ** i
+            cj = 2 ** j
+            ck = 2 ** k
+
+            print(ci, cj, ck)
+
+            rnn.append(RNN.start(ci, cj, ck))
+
+for lists in rnn:
+    print("embedding_dim: " + str(lists[0]) + ", hidden_units: " + str(lists[1]) + ", batch_size: " + str(lists[2]) +
+          ", LSTM loss: " + str(lists[3]) + ", LSTM Acc: " + str(lists[4]) + ", BiLSTM loss: " + str(lists[5]) + ", BiLSTM Acc: " + str(lists[6]))
