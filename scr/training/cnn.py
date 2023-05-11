@@ -5,6 +5,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import time
 
 
 class CNN:
@@ -41,11 +42,15 @@ class CNN:
         mc = ModelCheckpoint('../../data/model/CNN_mk_model.h5', monitor='val_acc', mode='max', verbose=1,
                              save_best_only=True)
 
-        history = model.fit(X_train, y_train, batch_size=64, epochs=10, validation_split=0.2, verbose=2,
+        start = time.time()
+        history = model.fit(X_train, y_train, batch_size=32, epochs=10, validation_split=0.2, verbose=2,
                             callbacks=[es, mc])
+        end = time.time() - start
 
         loaded_model = load_model('../../data/model/CNN_mk_model.h5')
-        print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
+        loss, final_acc = loaded_model.evaluate(X_test, y_test)
+        print("embedding_dim: 32, num_filters: 32, batch_size: 32, M1D loss: " + str(loss) + ", M1D Acc: " + str(round(
+            final_acc*100, 2)), ", Time Taken: " + str(round(end, 3)))
 
         model_loss(history)
 
@@ -72,8 +77,10 @@ class CNN:
         mc = ModelCheckpoint('../../data/model/CNN_od_model.h5', monitor='val_acc', mode='max', verbose=1,
                              save_best_only=True)
 
-        history = model.fit(X_train, y_train, batch_size=64, epochs=10, validation_split=0.2, verbose=2,
+        start = time.time()
+        history = model.fit(X_train, y_train, batch_size=32, epochs=10, validation_split=0.2, verbose=2,
                             callbacks=[es, mc])
+        end = time.time() - start
 
         str_X_train = [str(x) for x in X_train]
         tokenizer = Tokenizer()
@@ -82,9 +89,11 @@ class CNN:
         str_X_test = [str(x) for x in X_test]
         X_test_encoded = tokenizer.texts_to_sequences(str_X_test)
         X_test_padded = pad_sequences(X_test_encoded, maxlen=max_len)
-        print("\n 테스트 정확도: %.4f" % (model.evaluate(X_test_padded, y_test)[1]))
 
         loaded_model = load_model('../../data/model/CNN_od_model.h5')
+        loss, final_acc = loaded_model.evaluate(X_test, y_test)
+        print("embedding_dim: 32, num_filters: 32, batch_size: 32, 1D loss: " + str(loss) + ", 1D Acc: " + str(round(
+            final_acc * 100, 2)), ", Time Taken: " + str(round(end, 3)))
 
         model_loss(history)
 

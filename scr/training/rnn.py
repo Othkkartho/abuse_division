@@ -3,6 +3,7 @@ from scr.training.pretreatment import pretreatment, sentiment_predict, model_los
 from tensorflow.keras.layers import Embedding, Dense, LSTM, Bidirectional
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+import time
 
 
 class RNN:
@@ -17,10 +18,15 @@ class RNN:
                              save_best_only=True)
 
         model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
-        history = model.fit(X_train, y_train, epochs=20, callbacks=[es, mc], batch_size=64, validation_split=0.2)
+
+        start = time.time()
+        history = model.fit(X_train, y_train, epochs=20, callbacks=[es, mc], batch_size=32, validation_split=0.2)
+        end = time.time() - start
 
         loaded_model = load_model('../../data/model/rnn_BiLSTM_best_model.h5')
-        print("테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
+        loss, final_acc = loaded_model.evaluate(X_test, y_test)
+        print("embedding_dim: 32, hidden_units: 32, batch_size: 32, BiLSTM loss: " + str(loss) + ", BiLSTM Acc: " + str(
+            round(final_acc*100, 2)) + ", Time Taken: " + str(round(end, 3)))
 
         model_loss(history)
 
@@ -39,10 +45,14 @@ class RNN:
                              save_best_only=True)
 
         model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
+        start = time.time()
         history = model.fit(X_train, y_train, epochs=20, callbacks=[es, mc], batch_size=64, validation_split=0.2)
+        end = time.time() - start
 
         loaded_model = load_model('../../data/model/rnn_LSTM_best_model.h5')
-        print("\n 테스트 정확도: %.4f" % (loaded_model.evaluate(X_test, y_test)[1]))
+        loss, final_acc = loaded_model.evaluate(X_test, y_test)
+        print("embedding_dim: 32, hidden_units: 32, batch_size: 32, LSTM loss: " + str(loss) + ", LSTM Acc: " + str(
+            round(final_acc * 100, 2)) + ", Time Taken: " + str(round(end, 3)))
 
         model_loss(history)
 
@@ -60,7 +70,9 @@ class RNN:
         loaded_model_bilstm = self.BiLstmLearn(embedding_dim, hidden_units, vocab_size, X_train, X_test, y_train, y_test)
 
         sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_lstm, stopwords, tokenizer, max_len)
+        sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_bilstm, stopwords, tokenizer, max_len)
         sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_lstm, stopwords, tokenizer, max_len)
+        sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_bilstm, stopwords, tokenizer, max_len)
 
 
 rnn = RNN()

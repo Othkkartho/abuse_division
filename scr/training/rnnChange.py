@@ -95,4 +95,4 @@ for embedding_dim in range_list:
 
 for lists in rnn:
     print("embedding_dim: " + str(lists[0]) + ", hidden_units: " + str(lists[1]) + ", batch_size: " + str(lists[2]) +
-          ", LSTM loss: " + str(lists[3]) + ", LSTM Acc: " + str(lists[4]) + ", BiLSTM loss: " + str(lists[5]) + ", BiLSTM Acc: " + str(lists[6]) + ", Time Taken: " + str(lists[7]) + "second")
+          ", LSTM loss: " + str(lists[3]) + ", LSTM Acc: " + str(lists[4]) + ", BiLSTM loss: " + str(lists[5]) + ", BiLSTM Acc: " + str(lists[6]) + ", Time Taken: " + str(lists[7]))
