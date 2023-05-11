@@ -72,10 +72,10 @@ class RNN:
         end = time.time() - start
 
         result.append(l_loss)
-        result.append(final_acc_l)
+        result.append(round(final_acc_l*100, 2))
         result.append(b_loss)
-        result.append(final_acc_b)
-        result.append(end)
+        result.append(round(final_acc_b*100, 2))
+        result.append(round(end, 3))
 
         # sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_lstm, stopwords, tokenizer, max_len)
         # sentiment_predict("안녕하세요 오랜만에 뵈요. 어떤일 하고 있나요?", loaded_model_lstm, stopwords, tokenizer, max_len)
@@ -84,17 +84,15 @@ class RNN:
 
 
 rnn = []
-for i in range(0, 9, 2):
-    for j in range(0, 9, 2):
-        for k in range(0, 9, 2):
-            ci = 2 ** i
-            cj = 2 ** j
-            ck = 2 ** k
+range_list = [8, 64, 256]
+for embedding_dim in range_list:
+    for hidden_units in range_list:
+        for batch_size in range_list:
 
-            print(ci, cj, ck)
+            print(embedding_dim, hidden_units, batch_size)
 
-            rnn.append(RNN.start(ci, cj, ck))
+            rnn.append(RNN.start(embedding_dim, hidden_units, batch_size))
 
 for lists in rnn:
     print("embedding_dim: " + str(lists[0]) + ", hidden_units: " + str(lists[1]) + ", batch_size: " + str(lists[2]) +
-          ", LSTM loss: " + str(lists[3]) + ", LSTM Acc: " + str(lists[4]) + ", BiLSTM loss: " + str(lists[5]) + ", BiLSTM Acc: " + str(lists[6]) + ", Time Taken: " + str(lists[7]))
+          ", LSTM loss: " + str(lists[3]) + ", LSTM Acc: " + str(lists[4]) + ", BiLSTM loss: " + str(lists[5]) + ", BiLSTM Acc: " + str(lists[6]) + ", Time Taken: " + str(lists[7]) + "second")

@@ -106,10 +106,10 @@ class CNN:
         end = time.time() - start
 
         result.append(m_loss)
-        result.append(final_acc_m)
+        result.append(round(final_acc_m*100, 2))
         result.append(o_loss)
-        result.append(final_acc_o)
-        result.append(end)
+        result.append(round(final_acc_o*100, 2))
+        result.append(round(end, 3))
 
         # sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_mk, stopwords, tokenizer, max_len)
         # sentiment_predict("미친 새끼 또 저 지랄이네 대단하다 대단해", loaded_model_od, stopwords, tokenizer, max_len)
@@ -120,13 +120,10 @@ class CNN:
 
 
 cnn = []
-for ci in range(0, 9, 2):
-    for cj in range(0, 9, 2):
-        for ck in range(0, 9, 2):
-            embedding_dim = 2 ** ci
-            num_filters = 2 ** cj
-            batch_size = 2 ** ck
-
+range_list = [8, 64, 256]
+for embedding_dim in range_list:
+    for num_filters in range_list:
+        for batch_size in range_list:
             print(embedding_dim, num_filters, batch_size)
 
             cnn.append(CNN.start(embedding_dim, num_filters, batch_size))
