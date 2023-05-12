@@ -157,3 +157,19 @@ def model_loss(history):
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
     plt.show()
+
+    plt.clf()
+    try:
+        epochs = range(1, len(history.history['acc']) + 1)
+    except KeyError:
+        epochs = range(1, len(history.history['accuracy']) + 1)
+    try:
+        plt.plot(epochs, history.history['acc'])
+    except KeyError:
+        plt.plot(epochs, history.history['accuracy'])
+    plt.plot(epochs, history.history['val_acc'])
+    plt.title('model acc')
+    plt.ylabel('acc')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.show()
