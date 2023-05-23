@@ -35,11 +35,11 @@ for i in range(20, 0, -1):
         for j in link:
             hrefs.append(j.attrs['href'])
 
-        for href in hrefs:
-            total_list.append(href)
-
-        print("리스트 개수: ", len(total_list))
+        print("리스트 개수: ", len(hrefs))
     except IndexError:
         pass
+
+for href in hrefs:
+    total_list.append(href)
 
 save_list_to_txt(total_list, '../../data/link.txt')

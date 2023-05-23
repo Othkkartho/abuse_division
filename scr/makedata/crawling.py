@@ -9,7 +9,7 @@ browser = webdriver.Chrome('C:/chromedriver.exe')
 def save_list_to_txt(data_list, filename):
     with open(filename, 'w', encoding='utf-8') as file:
         for item in data_list:
-            file.write(str(item) + '\n')
+            file.write(str(item) + '|1\n')
     print('save list')
 
 
