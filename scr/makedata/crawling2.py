@@ -18,7 +18,7 @@ def move_page(page):
 total_list = []
 hrefs = []
 
-for i in range(20, 1, -1):
+for i in range(20, 0, -1):
     url = move_page(i)
     time.sleep(1.5)
 
