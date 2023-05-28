@@ -64,5 +64,5 @@ for i in view_list:
 
         print("리스트 개수: ", len(total_list))
 
-save_list_to_txt(total_list, '../../data/dataset2.txt')
+save_list_to_txt(total_list, '../../data/dataset_libe.txt')
 
