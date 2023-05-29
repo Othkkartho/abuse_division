@@ -10,13 +10,15 @@
 
 import csv
 
-with open('D:/study/code/Source/pycharm_workspace/abuse_division/data/dataset_edu2.txt', 'r', encoding='utf-8') as f1, open('D:/study/code/Source/pycharm_workspace/abuse_division/data/final.csv', 'w', newline='', encoding='utf-8') as f2:
+with open('D:/study/code/Source/pycharm_workspace/abuse_division/data/dataset.txt', 'r', encoding='utf-8') as f1, open('D:/study/code/Source/pycharm_workspace/abuse_division/data/origin_final.csv', 'w', newline='', encoding='utf-8') as f2:
     writer = csv.writer(f2)
     writer.writerow(['text', 'label'])
+    try:
+        for line in f1:
+            parts = line.strip().split('|')
+            text = parts[0].strip()
+            label = parts[1].strip()
 
-    for line in f1:
-        parts = line.strip().split('|')
-        text = parts[0].strip()
-        label = parts[1].strip()
-
-        writer.writerow([text, label])
+            writer.writerow([text, label])
+    except IndexError:
+        print('error')
