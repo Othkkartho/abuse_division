@@ -12,8 +12,7 @@ def pretreatment():
     # plt 폰트 설정
     plt.rcParams["font.family"] = 'NanumGothic'
 
-    data = pd.read_csv('../../data/final.csv', encoding='utf-8')
-    # data = pd.read_csv('../../data/origin_final.csv', encoding='utf-8')
+    data = pd.read_csv('../../data/origin_final.csv', encoding='utf-8')
     # print('총 샘플의 수 :', len(data))
 
     # print(data['text'].nunique(), data['label'].nunique())
